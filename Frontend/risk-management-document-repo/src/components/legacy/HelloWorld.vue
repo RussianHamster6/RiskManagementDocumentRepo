@@ -27,6 +27,18 @@
       <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
     </ul>
+    <b-button variant="danger" v-on:click="onClick">Button</b-button>
+    
+    <tr v-bind:key="item" v-for="item in users">
+      <h1>{{ item.name }}</h1>
+    </tr>
+
+    <div v-if="this.persistedTest">
+      <h1>Hello!</h1>
+    </div>
+
+    <input type = "text" v-model="stringInMahData"/>
+    <h1>{{ this.computedExample }}</h1>
   </div>
 </template>
 
@@ -35,6 +47,45 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  methods: {
+    onClick(){
+      if (!this.persistedTest ){
+        this.persistedTest = true
+      }
+      else{
+        this.persistedTest = false
+      }
+    }
+  },
+  computed: {
+    computedExample(){
+      return this.stringInMahData.toUpperCase()
+    }
+  },
+  beforeCreate: 
+    function () {
+      this.dataIn = true
+      console.log(this.dataIn)
+    }
+  ,
+  data() {
+    return {
+      users : [
+      {
+        name: "Josh"
+      },
+      {
+        name: "Declan"
+      },
+      {
+        name: "Christian"
+      }
+      ],
+      persistedTest: false,
+      stringInMahData: "Whatever",
+      dataIn: undefined
+    }
   }
 }
 </script>
@@ -54,5 +105,8 @@ li {
 }
 a {
   color: #42b983;
+}
+tr {
+  display: inline-block;
 }
 </style>

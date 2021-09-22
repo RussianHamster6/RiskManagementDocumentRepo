@@ -1,7 +1,7 @@
 <template>
     <b-container id="loginBox" align-v="center">
         <b-form-input class="inputBox" v-model="text" placeholder="enter your username"></b-form-input>
-        <b-form-input class="inputBox" v-model="text" placeholder="enter your password"></b-form-input>
+        <b-form-input class="inputBox" type="password" placeholder="enter your password" ></b-form-input>
         <b-button class="button">login</b-button>
         <b-button class="button">register</b-button>
     </b-container>
@@ -10,7 +10,6 @@
 <script>
 export default{
     setup() {
-        
     },
 }
 </script>

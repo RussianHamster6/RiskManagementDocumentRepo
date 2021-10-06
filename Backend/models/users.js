@@ -1,4 +1,4 @@
-let User = class{
+class User{
     constructor(id,name,passwordHash,salt){
         this.id = id;
         this.userName = name;
@@ -6,3 +6,5 @@ let User = class{
         this.passwordSalt = salt;
     }
 }
+
+module.exports = User;

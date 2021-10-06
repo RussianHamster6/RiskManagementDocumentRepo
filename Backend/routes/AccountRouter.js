@@ -1,12 +1,13 @@
 const AccountBusiness  = require('../business/AccountBusiness');
+const User = require('../models/users')
 let express = require('express');
 let bodyParser = require('body-parser');
 let router = express.Router();
-const app = express()
+const app = express();
 
 //Middleware config
-const jsonParser = bodyParser.json()
-const urlEncodedParser = bodyParser.urlencoded({extended: false})
+const jsonParser = express.json()
+const urlEncodedParser = express.urlencoded({extended: false})
 const accountBusiness = new AccountBusiness();
 //Accounts Get all
 router.get('/', function(req, res, next) {
@@ -15,10 +16,17 @@ router.get('/', function(req, res, next) {
 
 //Accounts Post
 router.post('/', jsonParser, function(req, res, next){
-    console.log(req.body)
+    
+    let user = new User(
+      null,
+      req.body.userName,
+      req.body.passwordHash,
+      req.body.passwordSalt
+    );
+
     //TODO: Validation
     //Request to business logic
-    accountBusiness.AddAccount("We Do be Hitting tho")
+    accountBusiness.AddAccount(user)
     res.send('Accounts Post Hit');
 })
 

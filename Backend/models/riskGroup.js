@@ -1,4 +1,4 @@
-let RiskGroup = class{
+class RiskGroup{
     constructor(id,name){
         this.id = id;
         this.riskGroupName = name;
@@ -25,3 +25,5 @@ let RiskGroup = class{
         this.listDocumentId = []
     }
 }
+
+module.exports = RiskGroup

@@ -1,4 +1,4 @@
-let Document = class{
+class Document{
     constructor(id,name,path,expiry){
         this.id = id;
         this.documentName = name;
@@ -6,3 +6,5 @@ let Document = class{
         this.expiry = expiry
     }
 }
+
+module.exports = Document

@@ -31,11 +31,30 @@ class AccountBusiness extends BusinessBase{
             });
         })
         
-        
-        console.log(newAccount.userName)
         console.log('exiting - AddAccount')
     }
 
+    GetAllAccounts(){
+        //Can't access this.db/url from within new promise so need to set them
+        const dataBase = this.db;
+        const urlGet = this.url;
+        //returns promise so that I can return after promise has been resolved
+        return new Promise(function(resolve,reject) {
+            console.log("entering - GetAllAccounts")
+
+            MongoClient.connect(urlGet, function(err,db){
+                if(err) throw err;
+                var dbo = db.db(dataBase);
+                dbo.collection(collection).find({}).toArray(function(err,res){
+                    if (err) throw err;
+                    db.close();
+                    //resolve the values found from the DB
+                    resolve(res);
+                })
+            })
+        console.log('exiting - GetAllAccounts')
+        })
+    }
 }
 
 module.exports = AccountBusiness

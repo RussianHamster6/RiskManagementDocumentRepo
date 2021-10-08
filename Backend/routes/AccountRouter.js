@@ -10,8 +10,11 @@ const jsonParser = express.json()
 const urlEncodedParser = express.urlencoded({extended: false})
 const accountBusiness = new AccountBusiness();
 //Accounts Get all
-router.get('/', function(req, res, next) {
-  res.send('Accounts Get Hit');
+router.get('/', async (req, res) => {
+  //async to wait for v v to come back from GetAllAccounts
+  accountBusiness.GetAllAccounts().then(function(v){
+    res.send(v)
+  })
 });
 
 //Accounts Post

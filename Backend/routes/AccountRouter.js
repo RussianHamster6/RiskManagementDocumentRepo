@@ -17,6 +17,19 @@ router.get('/', function(req, res, next) {
 //Accounts Post
 router.post('/', jsonParser, function(req, res, next){
     
+    //Validate request
+    if(!req.body.userName || typeof req.body.userName != "string"){
+      res.status(400).send({"error":"Username is invalid"})
+    }
+    else if(!req.body.passwordHash || typeof req.body.passwordHash != "string"){
+      res.status(400).send({"error":"passwordHash is invalid"})
+    }
+    else if(!req.body.passwordSalt || typeof req.body.passwordSalt != "string"){
+      res.status(400).send({"error":"passowordSalt is invalid"})
+    }
+    //Request Valid run logic
+    else{
+    //creates object of User to pass to business
     let user = new User(
       null,
       req.body.userName,
@@ -24,10 +37,10 @@ router.post('/', jsonParser, function(req, res, next){
       req.body.passwordSalt
     );
 
-    //TODO: Validation
     //Request to business logic
     accountBusiness.AddAccount(user)
     res.send('Accounts Post Hit');
+    }
 })
 
 //Export router

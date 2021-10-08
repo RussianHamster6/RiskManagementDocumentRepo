@@ -16,7 +16,9 @@ class AccountBusiness extends BusinessBase{
         console.log('entering - AddAccount')
         //TODO: Create logic to find last id in mongoDB
         //newAccount.id = idLookup();
-        
+        //ID might be able to be deprecated due to username being unique
+        //TODO: Validate that username is unique
+
         newAccount.id = 1;
         
         MongoClient.connect(this.url, function(err, db) {

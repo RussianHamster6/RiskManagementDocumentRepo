@@ -20,6 +20,8 @@ router.get('/', async (req, res) => {
 router.get('/:userId', async (req, res) => {
   accountBusiness.GetSpecificAccount(req.params.userId).then(function(v){
     res.send(v);
+  }).catch(function(v){
+    res.status(400).send(v);
   });
 })
 
@@ -35,8 +37,8 @@ router.post('/', jsonParser, async (req, res) => {
     else if(!req.body.passwordSalt || typeof req.body.passwordSalt != "string"){
       res.status(400).send({"error":"passowordSalt is invalid"})
     }
-    //Request Valid run logic
     else{
+    
     //Request to business logic
     accountBusiness.AddAccount(req).then(function(){
       res.send('successfully inserted user')

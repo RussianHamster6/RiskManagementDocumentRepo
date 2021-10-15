@@ -81,9 +81,15 @@ class AccountBusiness extends BusinessBase{
             MongoClient.connect(urlGet, function(err,db){
                 if(err) throw err;
                 var dbo = db.db(dataBase);
-                dbo.collection(collection).find({}, {projeection: {userName: userName}}).toArray(function(err,res){
+                var query = {userName: userName}
+                dbo.collection(collection).find(query).toArray(function(err,res){
                     if(err) throw err;
                     db.close();
+                    console.log(res);
+                    console.log("^^Res")
+                    if(res[0] == undefined){
+                        reject({Error: "No user found with that name"})
+                    }
                     //resolve the values found from the DB
                     resolve(res);
                 })

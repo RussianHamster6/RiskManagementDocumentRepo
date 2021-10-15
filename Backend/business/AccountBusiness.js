@@ -1,5 +1,6 @@
 require('../models/users')
 const BusinessBase = require('./businessBase')
+const User = require('../models/users')
 const MongoClient = require('mongodb').MongoClient;
 const collection = "users"
 
@@ -11,20 +12,33 @@ class AccountBusiness extends BusinessBase{
     }
 
     //Add Account logic
-    AddAccount(newAccount){
+    //TODO: MAKE ASYNC YOU DUMB FUCK
+    AddAccount(req){
         const dataBase = this.db;
+        const urlPost = this.url;
+
         console.log('entering - AddAccount')
         //TODO: Create logic to find last id in mongoDB
         //newAccount.id = idLookup();
         //ID might be able to be deprecated due to username being unique
         //TODO: Validate that username is unique
 
-        newAccount.id = 1;
+        return new Promise(function(resolve,reject) {
+
+        //creates object of User
+        let user = new User(
+            null,
+            req.body.userName,
+            req.body.passwordHash,
+            req.body.passwordSalt
+        );
+
+        user.id = 1;
         
-        MongoClient.connect(this.url, function(err, db) {
+        MongoClient.connect(urlPost, function(err, db) {
             if(err) throw err;
             var dbo = db.db(dataBase);
-            dbo.collection(collection).insertOne(newAccount, function(err,res){
+            dbo.collection(collection).insertOne(user, function(err,res){
                 if(err) throw err;
                 console.log("1 document inserted");
                 db.close();
@@ -32,6 +46,7 @@ class AccountBusiness extends BusinessBase{
         })
         
         console.log('exiting - AddAccount')
+        })
     }
 
     GetAllAccounts(){
@@ -53,6 +68,27 @@ class AccountBusiness extends BusinessBase{
                 })
             })
         console.log('exiting - GetAllAccounts')
+        })
+    }
+
+    GetSpecificAccount(userName){
+        const dataBase = this.db;
+        const urlGet = this.url;
+
+        return new Promise(function(resolve,reject){
+            console.log("entering - GetSpecifiedAccount")
+
+            MongoClient.connect(urlGet, function(err,db){
+                if(err) throw err;
+                var dbo = db.db(dataBase);
+                dbo.collection(collection).find({}, {projeection: {userName: userName}}).toArray(function(err,res){
+                    if(err) throw err;
+                    db.close();
+                    //resolve the values found from the DB
+                    resolve(res);
+                })
+            })
+            console.log("exiting - GetAllAccounts")
         })
     }
 }

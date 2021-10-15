@@ -1,5 +1,4 @@
 const AccountBusiness  = require('../business/AccountBusiness');
-const User = require('../models/users')
 let express = require('express');
 let bodyParser = require('body-parser');
 let router = express.Router();
@@ -17,9 +16,15 @@ router.get('/', async (req, res) => {
   })
 });
 
+//Account Get Specified Account
+router.get('/:userId', async (req, res) => {
+  accountBusiness.GetSpecificAccount(req.params.userId).then(function(v){
+    res.send(v);
+  });
+})
+
 //Accounts Post
-router.post('/', jsonParser, function(req, res, next){
-    
+router.post('/', jsonParser, async (req, res) => {
     //Validate request
     if(!req.body.userName || typeof req.body.userName != "string"){
       res.status(400).send({"error":"Username is invalid"})
@@ -32,17 +37,10 @@ router.post('/', jsonParser, function(req, res, next){
     }
     //Request Valid run logic
     else{
-    //creates object of User to pass to business
-    let user = new User(
-      null,
-      req.body.userName,
-      req.body.passwordHash,
-      req.body.passwordSalt
-    );
-
     //Request to business logic
-    accountBusiness.AddAccount(user)
-    res.send('Accounts Post Hit');
+    accountBusiness.AddAccount(req).then(function(){
+      res.send('successfully inserted user')
+    })
     }
 })
 

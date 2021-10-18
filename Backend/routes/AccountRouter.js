@@ -40,7 +40,6 @@ router.post('/', jsonParser, async (req, res) => {
     else{
     //Request to business logic
     await accountBusiness.AddAccount(req).then((result) => {
-      console.log(result)
       if(result.status == "OK"){
         res.send(result)
       }
@@ -48,16 +47,51 @@ router.post('/', jsonParser, async (req, res) => {
         res.status(400).send(result)
       }
     })
+  }
+})
 
-    
+router.post('/update/:userId', jsonParser, function (req,res) {
+  if(!req.body.userName || typeof req.body.userName != "string"){
+    res.status(400).send({"error":"Username is invalid"})
+  }
+  else if(!req.body.passwordHash || typeof req.body.passwordHash != "string"){
+    res.status(400).send({"error":"passwordHash is invalid"})
+  }
+  else if(!req.body.passwordSalt || typeof req.body.passwordSalt != "string"){
+    res.status(400).send({"error":"passowordSalt is invalid"})
+  }
+  else if(!req.params.userId || typeof req.params.userId != "string"){
+    res.status(400).send({"error":"The user you are trying to updaate is invalid"})
+  }
+  else{
+    accountBusiness.UpdateAccount(req.params.userId,req.body).then((result) => {
+      if(result.status == "OK"){      
+        res.send(result)
+      }
+      else{
+        res.status(400).send(result)
+      }
+    }).catch((error) => {
+      res.send(error)
+    })
+  }
+})
 
-    /*accountBusiness.AddAccount(req).then(function(v){
-      res.send({status:"OK", message:"Successfully Registered user"})
-    }).catch(function(v){
-        console.log(v)
-        console.log("we're out 2 ")
-        res.status(400).send({status:"ERROR", message:"UserName already taken"})
-    })*/
+router.delete('/:userId', async (req,res) => {
+  if(!req.params.userId || typeof req.params.userId != "string"){
+    res.status(400).send({"error":"The user you are trying to delete is invalid"})
+  }
+  else{
+    accountBusiness.DeleteAccount(req.params.userId).then((result) => {
+      if(result.status == "OK"){      
+        res.send(result)
+      }
+      else{
+        res.status(400).send(result)
+      }
+    }).catch((error) => {
+      res.send(error)
+    })
   }
 })
 

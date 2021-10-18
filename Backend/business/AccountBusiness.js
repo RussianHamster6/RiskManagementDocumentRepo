@@ -68,102 +68,9 @@ class AccountBusiness extends BusinessBase{
             return ({status:"OK", message:"successfully inserted user"})
         }
         else{
+            console.log('exiting - AddAccount')
             return ({status:"ERROR", message:"UserName already taken"});
         }
-
-
-        /*this.GetSpecificAccount(req.body.userName).then(function(v){
-            new Promise(function(resolve,reject){
-                if(v.status){
-                    console.log(v)
-                    console.log("in da register")
-                    //creates object of User
-                    let user = new User(
-                        req.body.userName,
-                        req.body.passwordHash,
-                        req.body.passwordSalt
-                    );
-                    
-                    MongoClient.connect(url, function(err, db) {
-                        if(err) throw err;
-                        var dbo = db.db(dataBase);
-                        dbo.collection(collection).insertOne(user, function(err,res){
-                            if(err) throw err;
-                            console.log("1 document inserted");
-                            db.close();
-                        });
-                    })
-
-                    console.log('exiting - AddAccount')
-                    return ({status:"OK", message:"successfully inserted user"})
-                }
-                else {
-                    console.log(v)
-                    return ({status:"ERROR", message:"UserName already taken"});
-                }
-            })
-        })
-
-        /*this.GetSpecificAccount(req.body.userName).catch(function(v){
-            return new Promise(function(resolve,reject){
-                if(v.status){
-                    console.log(v)
-                    //creates object of User
-                    let user = new User(
-                        req.body.userName,
-                        req.body.passwordHash,
-                        req.body.passwordSalt
-                    );
-                    
-                    MongoClient.connect(url, function(err, db) {
-                        if(err) throw err;
-                        var dbo = db.db(dataBase);
-                        dbo.collection(collection).insertOne(user, function(err,res){
-                            if(err) throw err;
-                            console.log("1 document inserted");
-                            db.close();
-                        });
-                    })
-
-                    console.log('exiting - AddAccount')
-                    resolve({status:"OK", message:"successfully inserted user"})
-                }
-                else {
-                    console.log(v)
-                    reject({status:"ERROR", message:"UserName already taken"});
-                }
-            })
-        })
-
-
-        return new Promise(function(resolve,reject){
-            getSpec(req.body.userName).then(function(v){
-                if(v[0].userName){
-                    reject({status:"ERROR",message:"duplicate userName"})
-                }
-                else{
-                    //creates object of User
-                    let user = new User(
-                        req.body.userName,
-                        req.body.passwordHash,
-                        req.body.passwordSalt
-                    );
-                    
-                    MongoClient.connect(url, function(err, db) {
-                        if(err) throw err;
-                        var dbo = db.db(dataBase);
-                        dbo.collection(collection).insertOne(user, function(err,res){
-                            if(err) throw err;
-                            console.log("1 document inserted");
-                            db.close();
-                        });
-                    })
-
-                    console.log('exiting - AddAccount')
-                    resolve({status:"OK",messate:"successfully inserted user"})
-                }
-            })
-        })*/
     }
 
     GetAllAccounts(){
@@ -187,6 +94,58 @@ class AccountBusiness extends BusinessBase{
             })
         console.log('exiting - GetAllAccounts')
         })
+    }
+
+    async UpdateAccount(userName,body){
+        console.log("entering - UpdateAccount")
+        let url = this.url
+        let dataBase = this.db
+
+        let account = await this.GetSpecificAccount(userName)
+        if(account.status == "ERROR"){
+            console.log("exiting - UpdateAccount")
+            return ({status:"ERROR", message:"a record for this userID could not be found"})
+            
+        }
+        else{
+            MongoClient.connect(url,function(err,db){
+                if (err) throw err;
+                var dbo = db.db(dataBase);
+                var query = {userName : userName};
+                var newValuesSet = {$set: {userName: body.userName, passwordHash: body.passwordHash, passwordSalt: body.passwordSalt}};
+                dbo.collection(collection).updateOne(query, newValuesSet,function(err,res){
+                    if(err) throw err;
+                    db.close();
+                })
+            })
+            console.log("exiting - UpdateAccount")
+            return({status:"OK", message:"1 Document Updated"})
+        }
+    }
+
+    async DeleteAccount(userName){
+        console.log("entering - Delete Account")
+        let url = this.url
+        let dataBase = this.db
+
+        let account = await this.GetSpecificAccount(userName)
+        if(account.status == "ERROR"){
+            console.log("exiting - Delete Account")
+            return ({status:"ERROR", message:"a record for this userID could not be found"})
+        }
+        else{
+            MongoClient.connect(url,function(err,db){
+                if (err) throw err;
+                var dbo = db.db(dataBase);
+                var query = {userName : userName};
+                dbo.collection(collection).deleteOne(query,function(err,res){
+                    if(err) throw err;
+                    db.close();
+                })
+            })
+            console.log("exiting - Delete Account")
+            return({status:"OK", message:"1 Document Deleted"})
+        }
     }
 }
 

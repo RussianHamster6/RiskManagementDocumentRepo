@@ -38,12 +38,27 @@ router.post('/', jsonParser, async (req, res) => {
       res.status(400).send({"error":"passowordSalt is invalid"})
     }
     else{
-    
     //Request to business logic
-    accountBusiness.AddAccount(req).then(function(){
-      res.send('successfully inserted user')
+    await accountBusiness.AddAccount(req).then((result) => {
+      console.log(result)
+      if(result.status == "OK"){
+        res.send(result)
+      }
+      else{
+        res.status(400).send(result)
+      }
     })
-    }
+
+    
+
+    /*accountBusiness.AddAccount(req).then(function(v){
+      res.send({status:"OK", message:"Successfully Registered user"})
+    }).catch(function(v){
+        console.log(v)
+        console.log("we're out 2 ")
+        res.status(400).send({status:"ERROR", message:"UserName already taken"})
+    })*/
+  }
 })
 
 //Export router

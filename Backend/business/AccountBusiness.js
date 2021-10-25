@@ -46,7 +46,6 @@ class AccountBusiness extends BusinessBase{
         let account = await this.GetSpecificAccount(req.body.userName)
         console.log(account)
         if(account.status){
-            console.log("in da register")
             //creates object of User
             let user = new User(
                 req.body.userName,

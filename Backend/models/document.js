@@ -1,6 +1,5 @@
 class Document{
-    constructor(id,name,path,expiry){
-        this.id = id;
+    constructor(name,path,expiry){
         this.documentName = name;
         this.documentPath = path;
         this.expiry = expiry

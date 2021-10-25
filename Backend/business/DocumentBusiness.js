@@ -13,8 +13,8 @@ class DocumentBusiness extends BusinessBase{
 
     async AddDocument(doc,fileName,fileExtention,expiryDate){
         console.log("entering - Add Document")
-    try{
-        //await checkDocNameIsUnique...
+    
+        
         let url = this.url
         let dataBase = this.db
         let filePath = ""
@@ -27,30 +27,52 @@ class DocumentBusiness extends BusinessBase{
             filePath = './docStore/' + fileName + "." + fileExtention
             fileName = fileName + "." + fileExtention 
         }
-        console.log(fileName)
         let record = new Document(fileName,filePath,expiryDate)
-
-        MongoClient.connect(url, function(err, db) {
-            if(err) throw err;
-            var dbo = db.db(dataBase);
-            dbo.collection(collection).insertOne(record, function(err,res){
+        let exists = await this.doesDocumentExist(fileName)
+        if(exists){
+            console.log("We Errorin Bois")
+            return({status:"ERROR", message:"A Document was found with that name, please update or use a different name"})
+        }
+        else{
+            MongoClient.connect(url, function(err, db) {
                 if(err) throw err;
-                console.log("1 document inserted");
-                db.close();
-            });
+                var dbo = db.db(dataBase);
+                dbo.collection(collection).insertOne(record, function(err,res){
+                    if(err) throw err;
+                    console.log("1 document inserted");
+                    db.close();
+                });
+            })
+            //Moves document to filePath.
+            doc.mv(filePath)
+            console.log("exiting - Add Document: OK")
+            return ({status:"OK", message:"Document successfully uploaded and inserted", data:{fileName: fileName, size: doc.size}})
+        }
+    }
+
+    async doesDocumentExist(docName){
+        let url = this.url
+        let dataBase = this.db
+
+        return new Promise(function(resolve,reject){
+            console.log("entering - CheckDocumentExisists")
+
+            MongoClient.connect(url, function(err,db){
+                if(err) throw err;
+                var dbo = db.db(dataBase);
+                var query = {documentName: docName}
+                dbo.collection(collection).find(query).toArray(function(err,res){
+                    if(err) throw err;
+                    db.close();
+                    if(res[0] == undefined){
+                        resolve(false)
+                    }
+                    //resolve the values found from the DB
+                    resolve(true);
+                })
+            })
+            console.log("exiting - GetSpecifiedAccount")
         })
-        //Moves document to filePath.
-        doc.mv(filePath)
-        console.log("exiting - Add Document: OK")
-        return ({status:"OK", message:"Document successfully uploaded and inserted", data:{fileName: fileName, size: doc.size}})
-        
-    }
-    catch (error){
-        console.log("entering - Add Document: Error")
-        return({status:"ERROR", message:error})
-    }
-
-
     }
 }
 

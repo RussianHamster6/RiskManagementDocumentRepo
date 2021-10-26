@@ -58,5 +58,20 @@ router.get('/:documentName', async (req,res) => {
     }
 })
 
+router.delete('/:documentName', async (req,res) => {
+    if(!req.params.documentName || typeof req.params.documentName != "string"){ 
+        res.status(400).send({status:"ERROR", message:"You have not included a required parameter in the request"})
+    }
+    else{
+        documentBusiness.deleteDocument(req.params.documentName).then((ret) =>{
+            console.log(ret)
+            res.send(ret)
+        }).catch((ret) => {
+            console.log(ret)
+            res.status(500).send(ret)
+        })
+    }
+})
+
 //Export router
 module.exports = router;

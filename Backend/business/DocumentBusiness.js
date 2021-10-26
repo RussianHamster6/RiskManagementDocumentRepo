@@ -2,6 +2,7 @@ require('../models/document')
 const BusinessBase = require('./businessBase')
 const Document = require('../models/document')
 const MongoClient = require('mongodb').MongoClient;
+const fs = require('fs')
 const collection = "documents"
 
 class DocumentBusiness extends BusinessBase{
@@ -30,7 +31,6 @@ class DocumentBusiness extends BusinessBase{
         let record = new Document(fileName,filePath,expiryDate)
         let exists = await this.doesDocumentExist(fileName)
         if(exists){
-            console.log("We Errorin Bois")
             return({status:"ERROR", message:"A Document was found with that name, please update or use a different name"})
         }
         else{
@@ -97,7 +97,42 @@ class DocumentBusiness extends BusinessBase{
                     resolve(res);
                 })
             })
+            console.log("exiting - getDocument")
         })
+    }
+
+    async deleteDocument(docName){
+        console.log("entering - deleteDocument")
+        
+        let url = this.url
+        let dataBase = this.db
+
+        return new Promise(async (resolve,reject) => {
+        await this.getDocument(docName).then((v) => {
+            let document = v[0]
+            if(document.status == "ERROR"){
+                console.log("exiting - deleteDocument: ERROR")
+                resolve(document)
+            }
+            else{
+                MongoClient.connect(url, function(err,db){
+                    if(err) throw err;
+                    var dbo = db.db(dataBase);
+                    var query = {documentName: docName}
+                    dbo.collection(collection).deleteOne(query, function(err,res){
+                        if(err) return err;
+                        db.close();
+                    })
+                    fs.unlinkSync(document.documentPath)
+                })
+                console.log("exiting - deleteDocument")
+                resolve({status:"OK", message:"1 Document Deleted"})
+            }
+        }).catch((v) =>{
+            reject(v)
+        });
+    })
+        
     }
 }
 

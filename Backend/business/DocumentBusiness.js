@@ -11,9 +11,9 @@ class DocumentBusiness extends BusinessBase{
         super();
     }
 
+    //Adds a new document to the database and places the document in the correct place
     async AddDocument(doc,fileName,fileExtention,expiryDate){
         console.log("entering - Add Document")
-    
         
         let url = this.url
         let dataBase = this.db
@@ -50,6 +50,7 @@ class DocumentBusiness extends BusinessBase{
         }
     }
 
+    //Checks if document exists then returns true or false
     async doesDocumentExist(docName){
         let url = this.url
         let dataBase = this.db
@@ -71,7 +72,31 @@ class DocumentBusiness extends BusinessBase{
                     resolve(true);
                 })
             })
-            console.log("exiting - GetSpecifiedAccount")
+            console.log("exiting - CheckDocumentExisists")
+        })
+    }
+
+    async getDocument(docName){
+        let url = this.url
+        let dataBase = this.db
+
+        return new Promise(function (resolve,reject){
+            console.log("entering - getDocument")
+
+            MongoClient.connect(url, function(err,db){
+                if(err) throw err;
+                var dbo = db.db(dataBase);
+                var query = {documentName: docName}
+                dbo.collection(collection).find(query).toArray(function(err,res){
+                    if(err) throw err;
+                    db.close();
+                    if(res[0] == undefined){
+                        reject({status:"ERROR", message:"no document found with that name"})
+                    }
+                    //resolve the values found from the DB
+                    resolve(res);
+                })
+            })
         })
     }
 }

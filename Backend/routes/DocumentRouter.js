@@ -44,5 +44,19 @@ router.post('/', jsonParser, async (req,res) =>{
     }
 })
 
+//download document
+router.get('/:documentName', async (req,res) => {
+    if(!req.params.documentName || typeof req.params.documentName != "string"){ 
+        res.status(400).send({status:"ERROR", message:"You have not included a required parameter in the request"})
+    }
+    else{
+        documentBusiness.getDocument(req.params.documentName).then((val) =>{
+            res.download(val[0].documentPath)
+        }).catch((val) => {
+            res.status(500).send(val)
+        })
+    }
+})
+
 //Export router
 module.exports = router;

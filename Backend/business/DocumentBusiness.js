@@ -101,6 +101,31 @@ class DocumentBusiness extends BusinessBase{
         })
     }
 
+    GetDocumentsDetails(docName){
+        let dataBase = this.db
+        let url = this.url
+
+        return new Promise(function(resolve,reject){
+            console.log("entering - GetDocumentsDetails")
+
+            MongoClient.connect(url, function(err,db){
+                if(err) throw err;
+                var dbo = db.db(dataBase);
+                var query = {documentName: docName}
+                dbo.collection(collection).find(query).toArray(function(err,res){
+                    if(err) throw err;
+                    db.close();
+                    if(res[0] == undefined){
+                        resolve({status: "ERROR", Error: "No document found with that name"})
+                    }
+                    //resolve the values found from the DB
+                    resolve(res);
+                })
+            })
+            console.log("exiting - GetDocumentsDetails")
+        })
+    }
+
     async deleteDocument(docName){
         console.log("entering - deleteDocument")
         

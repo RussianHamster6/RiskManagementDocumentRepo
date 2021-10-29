@@ -133,31 +133,30 @@ class DocumentBusiness extends BusinessBase{
         let dataBase = this.db
 
         return new Promise(async (resolve,reject) => {
-        await this.getDocument(docName).then((v) => {
-            let document = v[0]
-            if(document.status == "ERROR"){
-                console.log("exiting - deleteDocument: ERROR")
-                resolve(document)
-            }
-            else{
-                MongoClient.connect(url, function(err,db){
-                    if(err) throw err;
-                    var dbo = db.db(dataBase);
-                    var query = {documentName: docName}
-                    dbo.collection(collection).deleteOne(query, function(err,res){
-                        if(err) return err;
-                        db.close();
+            await this.getDocument(docName).then((v) => {
+                let document = v[0]
+                if(document.status == "ERROR"){
+                    console.log("exiting - deleteDocument: ERROR")
+                    resolve(document)
+                }
+                else{
+                    MongoClient.connect(url, function(err,db){
+                        if(err) throw err;
+                        var dbo = db.db(dataBase);
+                        var query = {documentName: docName}
+                        dbo.collection(collection).deleteOne(query, function(err,res){
+                            if(err) return err;
+                            db.close();
+                        })
+                        fs.unlinkSync(document.documentPath)
                     })
-                    fs.unlinkSync(document.documentPath)
-                })
-                console.log("exiting - deleteDocument")
-                resolve({status:"OK", message:"1 Document Deleted"})
-            }
-        }).catch((v) =>{
-            reject(v)
-        });
-    })
-        
+                    console.log("exiting - deleteDocument")
+                    resolve({status:"OK", message:"1 Document Deleted"})
+                }
+            }).catch((v) =>{
+                reject(v)
+            });
+        })    
     }
 }
 

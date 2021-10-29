@@ -95,5 +95,21 @@ router.delete('/:userId', async (req,res) => {
   }
 })
 
+router.post('/login', jsonParser,async (req,res) => {
+  if(!req.body.userName || typeof req.body.userName != "string"){
+    res.status(400).send({"error":"Username is invalid"})
+  }
+  else if(!req.body.passwordHash || typeof req.body.passwordHash != "string"){
+    res.status(400).send({"error":"passwordHash is invalid"})
+  }
+  else{
+    await accountBusiness.userLogin(req.body.userName,req.body.passwordHash).then((result) => {
+      res.send(result);
+    }).catch((result) => {
+      res.status(500).send(result)
+    })
+  }
+})
+
 //Export router
 module.exports = router;

@@ -146,6 +146,35 @@ class AccountBusiness extends BusinessBase{
             return({status:"OK", message:"1 Document Deleted"})
         }
     }
+
+    //Needs some refinement, could do with hashing the password serverside or something maybe but for now it's servicable
+    //What might need doing is serverside salting of the password. 
+    //Username passed in and password given => get account from username
+    //use obtained account to generate the hash based on the salt serverside
+    //validate the login from there. Potentially better security wise but current implementation is *alright*
+
+    //The serverside user login validation
+    async userLogin(userName,passwordHash){
+        console.log("entering - userLogin")
+        return new Promise(async (resolve,reject) => {
+            await this.GetSpecificAccount(userName).then((val) => {
+                if(val.status == "ERROR"){
+                    reject(val)
+                }
+                else if(val[0].passwordHash === passwordHash){
+                    console.log("exiting - userLogin")
+                    resolve({status:"OK",message:"login success", loginStatus:true})
+                }
+                else{
+                    console.log("exiting - userLogin")
+                    resolve({status:"OK",message:"login fail", loginStatus:false})
+                }
+            }).catch((val) => {
+                console.log("exiting - userLogin")
+                reject(val)
+            })
+        })
+    }
 }
 
 module.exports = AccountBusiness

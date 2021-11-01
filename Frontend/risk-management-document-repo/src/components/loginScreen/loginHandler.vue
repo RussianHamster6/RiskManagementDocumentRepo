@@ -1,16 +1,38 @@
 <template>
-    <b-container id="loginBox" align-v="center">
-        <b-form-input class="inputBox" v-model="text" placeholder="enter your username"></b-form-input>
-        <b-form-input class="inputBox" type="password" placeholder="enter your password" ></b-form-input>
-        <b-button class="button">login</b-button>
-        <b-button class="button">register</b-button>
-    </b-container>
+    <div>
+        <b-container id="loginBox" align-v="center">
+            <b-form-input v-model="text" class="inputBox" placeholder="Enter your username"></b-form-input>
+            <b-form-input class="inputBox" type="password" placeholder="Enter your password"></b-form-input>
+            <b-button class="button">login</b-button>
+            <b-button class="button" v-b-modal.registerModal>register</b-button>
+        </b-container>
+
+        <b-modal id="registerModal" title="register" hide-footer>
+            <b-form-input v-model="text" class="inputBox" placeholder="Enter your username"></b-form-input>
+            <b-form-input v-model="text" class="inputBox" type="password" placeholder="Enter your Password"></b-form-input>
+            <b-form-input v-model="text" class="inputBox" type="password" placeholder="Confirm your password"></b-form-input>
+            <b-button class="button">Register!</b-button>
+            <p v-text="registerText"></p>
+        </b-modal>
+    </div>
 </template>
 
 <script>
+
 export default{
     setup() {
     },
+    data(){
+        return {
+            text: '',
+            registerText: '',
+        };
+    },
+    methods: {
+        register(){
+            this.$emit('register')
+        }
+    }
 }
 </script>
 

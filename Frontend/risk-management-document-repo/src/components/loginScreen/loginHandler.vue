@@ -1,36 +1,52 @@
 <template>
     <div>
         <b-container id="loginBox" align-v="center">
-            <b-form-input v-model="text" class="inputBox" placeholder="Enter your username"></b-form-input>
-            <b-form-input class="inputBox" type="password" placeholder="Enter your password"></b-form-input>
-            <b-button class="button">login</b-button>
-            <b-button class="button" v-b-modal.registerModal>register</b-button>
+            <div class="form-group" :class="{ 'form-group--error': $v.loginUserName.$error }">
+                <b-form-input v-model="loginUserName" class="inputBox" placeholder="Enter your username" :state="!$v.loginUserName.$invalid"></b-form-input>
+                <div class="error" v-if="!$v.loginUserName.required">Field is required</div>
+                <div class="error" v-if="!$v.loginUserName.minLength">UserName must have at least {{$v.loginUserName.$params.minLength.min}} letters.</div>
+                <b-form-input v-model="loginPassword" class="inputBox" type="password" placeholder="Enter your password" :state="!$v.loginPassword.$invalid"></b-form-input>
+                <div class="error" v-if="!$v.loginPassword.required">Field is required</div>
+                <b-button class="button">login</b-button>
+                <b-button class="button" @click="register">register</b-button>
+                <!--<b-button class="button" v-b-modal.registerModal>register</b-button>-->
+            </div>
         </b-container>
 
-        <b-modal id="registerModal" title="register" hide-footer>
-            <b-form-input v-model="text" class="inputBox" placeholder="Enter your username"></b-form-input>
-            <b-form-input v-model="text" class="inputBox" type="password" placeholder="Enter your Password"></b-form-input>
-            <b-form-input v-model="text" class="inputBox" type="password" placeholder="Confirm your password"></b-form-input>
-            <b-button class="button">Register!</b-button>
-            <p v-text="registerText"></p>
-        </b-modal>
+        <loginModal ref="loginModal"></loginModal>
     </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import Vuelidate from 'vuelidate'
+import {required, minLength} from 'vuelidate/lib/validators'
+import loginModal from '../loginModal/loginModal.vue';
+
+Vue.use(Vuelidate);
 
 export default{
+  components: { loginModal },
     setup() {
     },
     data(){
         return {
-            text: '',
-            registerText: '',
+            loginUserName: '',
+            loginPassword: ''
         };
     },
     methods: {
         register(){
-            this.$emit('register')
+            this.$refs.loginModal.show();
+        }
+    },
+    validations: {
+        loginUserName: {
+            required,
+            minLength: minLength(4)
+        },
+        loginPassword: {
+            required
         }
     }
 }
@@ -56,6 +72,10 @@ export default{
 
 .inputBox{
     margin-top: 25px
+}
+
+.error{
+    color: #ff0033;
 }
 
 </style>

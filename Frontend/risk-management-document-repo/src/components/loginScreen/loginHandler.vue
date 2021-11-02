@@ -2,14 +2,16 @@
     <div>
         <b-container id="loginBox" align-v="center">
             <div class="form-group" :class="{ 'form-group--error': $v.loginUserName.$error }">
-                <b-form-input v-model="loginUserName" class="inputBox" placeholder="Enter your username" :state="!$v.loginUserName.$invalid"></b-form-input>
-                <div class="error" v-if="!$v.loginUserName.required">Field is required</div>
-                <div class="error" v-if="!$v.loginUserName.minLength">UserName must have at least {{$v.loginUserName.$params.minLength.min}} letters.</div>
-                <b-form-input v-model="loginPassword" class="inputBox" type="password" placeholder="Enter your password" :state="!$v.loginPassword.$invalid"></b-form-input>
-                <div class="error" v-if="!$v.loginPassword.required">Field is required</div>
-                <b-button class="button">login</b-button>
-                <b-button class="button" @click="register">register</b-button>
-                <!--<b-button class="button" v-b-modal.registerModal>register</b-button>-->
+            
+            <b-form-input v-model="loginUserName" @input="$v.loginUserName.$touch" class="inputBox" placeholder="Enter your username" :state="$v.loginUserName.$dirty? !$v.loginUserName.$error:null"></b-form-input>
+            <div class="error" v-if="!$v.loginUserName.required && $v.loginUserName.$dirty">Field is required</div>
+            <div class="error" v-if="!$v.loginUserName.minLength && $v.loginUserName.$dirty">UserName must have at least {{$v.loginUserName.$params.minLength.min}} letters.</div>
+            
+            <b-form-input v-model="loginPassword" @input="$v.loginPassword.$touch" class="inputBox" type="password" placeholder="Enter your password" :state="$v.loginPassword.$dirty? !$v.loginPassword.$error:null"></b-form-input>
+            <div class="error" v-if="!$v.loginPassword.required && $v.loginPassword.$dirty">Field is required</div>
+            
+            <b-button class="button">login</b-button>
+            <b-button class="button" @click="register">register</b-button>
             </div>
         </b-container>
 
@@ -31,8 +33,8 @@ export default{
     },
     data(){
         return {
-            loginUserName: '',
-            loginPassword: ''
+            loginUserName: null,
+            loginPassword: null
         };
     },
     methods: {

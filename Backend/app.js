@@ -11,6 +11,7 @@ app.use(fileUpload({
 }));
 
 app.use(cors({
+  //This wildcard needs to be replaced with an actual url when it is hosted
   origin: '*',
   methods: ['GET','POST','DELETE']
 }))

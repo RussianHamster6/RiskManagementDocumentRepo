@@ -147,12 +147,6 @@ class AccountBusiness extends BusinessBase{
         }
     }
 
-    //Needs some refinement, could do with hashing the password serverside or something maybe but for now it's servicable
-    //What might need doing is serverside salting of the password. 
-    //Username passed in and password given => get account from username
-    //use obtained account to generate the hash based on the salt serverside
-    //validate the login from there. Potentially better security wise but current implementation is *alright*
-
     //The serverside user login validation
     async userLogin(userName,passwordHash){
         console.log("entering - userLogin")
@@ -163,7 +157,7 @@ class AccountBusiness extends BusinessBase{
                 }
                 else if(val[0].passwordHash === passwordHash){
                     console.log("exiting - userLogin")
-                    resolve({status:"OK",message:"login success", loginStatus:true})
+                    resolve({status:"OK",message:"login success", loginStatus:true, user: val[0]})
                 }
                 else{
                     console.log("exiting - userLogin")

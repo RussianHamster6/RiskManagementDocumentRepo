@@ -28,10 +28,10 @@ router.get('/:userId', async (req, res) => {
 //Accounts Post
 router.post('/', jsonParser, async (req, res) => {
     //Validate request
-    if(!req.body.userName || typeof req.body.userName != "string"){
+    if(!req.body.userName || typeof req.body.userName != "string" || req.body.userName.length < 4){
       res.status(400).send({"error":"Username is invalid"})
     }
-    else if(!req.body.passwordHash || typeof req.body.passwordHash != "string"){
+    else if(!req.body.passwordHash || typeof req.body.passwordHash != "string" || req.body.passwordHash == "d41d8cd98f00b204e9800998ecf8427e"){
       res.status(400).send({"error":"passwordHash is invalid"})
     }
     else if(!req.body.passwordSalt || typeof req.body.passwordSalt != "string"){
@@ -51,16 +51,16 @@ router.post('/', jsonParser, async (req, res) => {
 })
 
 router.post('/update/:userId', jsonParser, function (req,res) {
-  if(!req.body.userName || typeof req.body.userName != "string"){
+  if(!req.body.userName || typeof req.body.userName != "string" || req.body.userName.length < 4){
     res.status(400).send({"error":"Username is invalid"})
   }
-  else if(!req.body.passwordHash || typeof req.body.passwordHash != "string"){
+  else if(!req.body.passwordHash || typeof req.body.passwordHash != "string" || req.body.passwordHash == "d41d8cd98f00b204e9800998ecf8427e"){
     res.status(400).send({"error":"passwordHash is invalid"})
   }
   else if(!req.body.passwordSalt || typeof req.body.passwordSalt != "string"){
     res.status(400).send({"error":"passowordSalt is invalid"})
   }
-  else if(!req.params.userId || typeof req.params.userId != "string"){
+  else if(!req.params.userId || typeof req.params.userId != "string" || req.body.userId.length < 4){
     res.status(400).send({"error":"The user you are trying to updaate is invalid"})
   }
   else{
@@ -106,7 +106,7 @@ router.post('/login', jsonParser,async (req,res) => {
     await accountBusiness.userLogin(req.body.userName,req.body.passwordHash).then((result) => {
       res.send(result);
     }).catch((result) => {
-      res.status(500).send(result)
+      res.status(400).send(result)
     })
   }
 })

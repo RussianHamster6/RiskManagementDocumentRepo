@@ -92,7 +92,7 @@ export default{
                         //cookie will be null after the hour has passed. 
                         this.$cookies.set('user',user,"1h")
                         console.log(this.$cookies.get('user'))
-                        //TODO: Routing. Probably a wednesday problem now
+                        this.$router.push('documents')
                     }
                     else{
                         this.loginErrorText = "Username/Password was incorrect please try again"

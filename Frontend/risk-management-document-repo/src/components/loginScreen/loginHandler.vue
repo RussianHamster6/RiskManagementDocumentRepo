@@ -31,7 +31,6 @@ const Config = require('../config/config.js')
 
 Vue.use(Vuelidate);
 Vue.use(VueCookies);
-Vue.$cookies.config('1d');
 
 export default{
   components: { loginModal },

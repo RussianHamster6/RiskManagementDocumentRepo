@@ -7,6 +7,7 @@
     </div>
     <router-view/>
   </div>
+  <!--TODO: Add logout button-->
 </template>
 
 <style>

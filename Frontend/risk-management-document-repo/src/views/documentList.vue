@@ -1,5 +1,6 @@
 <template>
     <div>
+        <br>
         <document-repo v-if="this.loadDocuments"/>
     </div>
 </template>

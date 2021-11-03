@@ -73,7 +73,7 @@ router.get('/:documentName', async (req,res) => {
 })
 
 router.get('/', async (req,res) => {
-    documentBusiness.GetDocumentsInfo().then((v) =>{
+    documentBusiness.GetAllDocuments().then((v) =>{
         res.send(v)
     })
 })

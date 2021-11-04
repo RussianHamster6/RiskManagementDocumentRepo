@@ -1,5 +1,7 @@
 <template>
     <b-modal id="registerModal" ref="registerModal" title="register" hide-footer>
+        <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
         <b-form-input v-model="$v.registerUserName.$model" @input="$v.registerUserName.$touch" class="inputBox" placeholder="Enter your username" :state="$v.registerUserName.$dirty? !$v.registerUserName.$error:null"></b-form-input>
         <div class="error" v-if="!$v.registerUserName.required && $v.registerUserName.$dirty">Field is required</div>
         <div class="error" v-if="!$v.registerUserName.minLength && $v.registerUserName.$dirty">UserName must have at least {{$v.registerUserName.$params.minLength.min}} letters.</div>

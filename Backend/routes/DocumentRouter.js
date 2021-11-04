@@ -93,6 +93,7 @@ router.delete('/:documentName', async (req,res) => {
 })
 
 router.post('/update/:documentName', async (req,res) => {
+    console.log(req.files)
     if(!req.params.documentName || typeof req.params.documentName != "string"){
         res.status(400).send({status:"ERROR", message:"You have not included a required parameter in the request"})
     }
@@ -115,7 +116,11 @@ router.post('/update/:documentName', async (req,res) => {
             res.status(400).send({status:"ERROR", message:"The Date you have sent is not in the correct format"})
         }
         else{
+            //Known bug: if updating to a name of another existing document will delete the document that was trying to be updated and not replace the existing document due to a duplicate name
+            //need to change business to instead of deleting the document record entirely, delete the actual file 
+            //then to just update the record instead of doing a full delete and add. 
             documentBusiness.deleteDocument(req.params.documentName).then( async (ret) =>{
+                console.log(ret)
                 if(ret.status == "OK"){
                     await documentBusiness.AddDocument(req.files.document,req.body.documentName,req.body.fileExtention,req.body.expiryDate).then((result) => {
                         if(result.status == "OK"){

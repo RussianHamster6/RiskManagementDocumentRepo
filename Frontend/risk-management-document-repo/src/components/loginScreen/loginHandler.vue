@@ -1,10 +1,12 @@
 <template>
     <div>
+        <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
         <b-container id="loginBox" align-v="center">
             <div class="error" v-if="loginErrorText" v-text="loginErrorText"></div>
             <div class="form-group" :class="{ 'form-group--error': $v.loginUserName.$error }">
             
-            <b-form-input v-model="loginUserName" @input="$v.loginUserName.$touch" class="inputBox" placeholder="Enter your username" :state="$v.loginUserName.$dirty? !$v.loginUserName.$error:null"></b-form-input>
+            <b-form-input v-model="loginUserName" @input="$v.loginUserName.$touch" class="inputBox" placeholder="Enter your username" :state="$v.loginUserName.$dirty? !$v.loginUserName.$error:null" style="margin-top: 10px"></b-form-input>
             <div class="error" v-if="!$v.loginUserName.required && $v.loginUserName.$dirty">Field is required</div>
             <div class="error" v-if="!$v.loginUserName.minLength && $v.loginUserName.$dirty">UserName must have at least {{$v.loginUserName.$params.minLength.min}} letters.</div>
             
@@ -141,5 +143,4 @@ export default{
 .error{
     color: #ff0033;
 }
-
 </style>

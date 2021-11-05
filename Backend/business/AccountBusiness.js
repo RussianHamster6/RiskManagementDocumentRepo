@@ -50,7 +50,7 @@ class AccountBusiness extends BusinessBase{
             let user = new User(
                 req.body.userName,
                 req.body.passwordHash,
-                req.body.passwordSalt
+                req.body.isAdmin
             );
             
             MongoClient.connect(url, function(err, db) {
@@ -111,7 +111,7 @@ class AccountBusiness extends BusinessBase{
                 if (err) throw err;
                 var dbo = db.db(dataBase);
                 var query = {userName : userName};
-                var newValuesSet = {$set: {userName: body.userName, passwordHash: body.passwordHash, passwordSalt: body.passwordSalt}};
+                var newValuesSet = {$set: {userName: body.userName, passwordHash: body.passwordHash, isAdmin: body.isAdmin}};
                 dbo.collection(collection).updateOne(query, newValuesSet,function(err,res){
                     if(err) throw err;
                     db.close();

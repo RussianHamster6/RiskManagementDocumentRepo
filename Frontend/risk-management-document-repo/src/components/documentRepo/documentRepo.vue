@@ -2,6 +2,7 @@
     <div>
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
+        
         <b-button variant="success" class="float-right" style="margin-right: 25px; margin-bottom:10px" @click="add">+</b-button>
         <div>
             <b-table hover :items="documents" :fields="fields" @row-clicked="rowClickHandler">

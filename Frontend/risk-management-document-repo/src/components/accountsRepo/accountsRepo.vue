@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div>
+            <b-form-input v-model="searchString" placeholder="Search..." style="width: 25%; margin-left:25px"></b-form-input>
+            <b-button class="float-left" style="margin-left:25px; margin-top:5px" @click="search">Search</b-button>
+        </div>
         <b-button variant="success" class="float-right" style="margin-right: 25px; margin-bottom:10px" @click="addUser">+</b-button>
         <div>
             <b-table hover :items="accounts" :fields="fields" @row-clicked="rowClickHandler">
@@ -21,6 +25,7 @@ export default {
     data(){
         return{
             accounts : [],
+            ogAccounts: [],
             fields: 
             [
                 {
@@ -28,7 +33,8 @@ export default {
                     sortable: true
                 }
             ],
-            userToView : new User("FAKE", "FAKE", "FAKE")
+            userToView : new User("FAKE", "FAKE", "FAKE"),
+            searchString: ""
         }
     },
     methods: {
@@ -49,6 +55,7 @@ export default {
                 res.forEach(x => {
                     let accountToAdd = new User(x.userName,x.passwordHash,x.passwordSalt)
                     this.accounts.push(accountToAdd);
+                    this.ogAccounts.push(accountToAdd);
                 });
             })
         },
@@ -59,6 +66,19 @@ export default {
         addUser(){
             this.$refs.loginModal.show();
         },
+        search(){
+            let searchVal = this.searchString
+            if(this.searchString == "" || this.searchString == null){
+                this.accounts = this.ogAccounts
+            }
+            else{
+                this.accounts = this.ogAccounts
+
+                this.accounts = this.accounts.filter(account =>{
+                    return account.userName.toLowerCase().includes(searchVal.toLowerCase())
+                })
+            }
+        }
     },
     mounted: function (){
         this.getAccountData();

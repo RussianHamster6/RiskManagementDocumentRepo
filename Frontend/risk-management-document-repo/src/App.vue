@@ -5,7 +5,7 @@
       <router-link to="/about">About</router-link> |
       <router-link to="/documents">Documents</router-link> |
       <router-link to="/accounts">Accounts</router-link>
-      <b-button style="float: right" @click="signOut">Sign Out</b-button>
+      <b-button style="float: right" @click="signOut" variant="danger">Sign Out</b-button>
     </div>
     <router-view/>
   </div>

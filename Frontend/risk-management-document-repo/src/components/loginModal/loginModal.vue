@@ -1,5 +1,5 @@
 <template>
-    <b-modal id="registerModal" ref="registerModal" title="register" hide-footer>
+    <b-modal id="registerModal" ref="registerModal" title="Register" hide-footer>
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
         <b-form-input v-model="$v.registerUserName.$model" @input="$v.registerUserName.$touch" class="inputBox" placeholder="Enter your username" :state="$v.registerUserName.$dirty? !$v.registerUserName.$error:null"></b-form-input>
@@ -44,7 +44,7 @@ export default {
                 let dataToSend = JSON.stringify({
                     userName: userNametoSend,
                     passwordHash: hashedPass,
-                    passwordSalt: "md5"
+                    passwordSalt: "registered"
                 })
 
                 new Promise((resolve) =>{
@@ -74,8 +74,8 @@ export default {
                     http.send(dataToSend);
                 }).then((res) =>{
                     this.registerText = res
+                    this.$emit('update');
                 });
-                
             }
         },
         data(){ return {

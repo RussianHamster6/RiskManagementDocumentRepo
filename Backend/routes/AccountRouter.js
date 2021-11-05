@@ -60,9 +60,6 @@ router.post('/update/:userId', jsonParser, function (req,res) {
   else if(!req.body.passwordSalt || typeof req.body.passwordSalt != "string"){
     res.status(400).send({"error":"passowordSalt is invalid"})
   }
-  else if(!req.params.userId || typeof req.params.userId != "string" || req.body.userId.length < 4){
-    res.status(400).send({"error":"The user you are trying to updaate is invalid"})
-  }
   else{
     accountBusiness.UpdateAccount(req.params.userId,req.body).then((result) => {
       if(result.status == "OK"){      

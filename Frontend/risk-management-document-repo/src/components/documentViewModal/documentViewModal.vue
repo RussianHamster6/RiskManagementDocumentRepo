@@ -2,7 +2,8 @@
     <b-modal id="documentViewModal" ref="documentViewModal" title="Document View" hide-footer>
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
-        <b-button class="button float-right" @click="deleteDoc">Delete</b-button>
+        <b-button class="button float-right" @click="promptDeleteConfirmation = true" variant="warning">Delete</b-button>
+        <b-button class="button float-right" v-if="promptDeleteConfirmation" @click="deleteDoc" variant="danger">Confirm Delete?</b-button>
         <b-form-input v-model="documentName" class="inputBox" @input="$v.documentName.$touch"></b-form-input>
         <div class="error" v-if="badFileExtention">Please include a file extention on your fileName</div>
         <div class="error" v-if="!$v.documentName.required && $v.documentName.$dirty">Field is required</div>
@@ -23,7 +24,7 @@
 
         <p v-text="documentMessage"></p>
 
-        <b-button class="button" @click="download" :disabled="$v.documentName.$dirty">Download</b-button>
+        <b-button class="button" @click="download" :disabled="$v.documentName.$dirty" variant="success">Download</b-button>
         <b-button class="button float-right" @click="update(this)" :disabled="!$v.documentToSend.$model">Update</b-button>
     </b-modal>
 </template>
@@ -159,6 +160,7 @@ export default {
             ogDocName: undefined,
             badDate: false,
             badFileExtention: false,
+            promptDeleteConfirmation: false,
             documentMessage: ""
         }
     },
@@ -167,7 +169,8 @@ export default {
             this.documentName = newVal.documentName
             this.documentPath = newVal.documentPath
             this.expiryDate = this.formatDateForDatePicker(newVal.expiry)
-            this.ogDocName = newVal.documentName
+            this.ogDocName = newVal.documentName,
+            this.promptDeleteConfirmation = false
         }
     },
     validations:{

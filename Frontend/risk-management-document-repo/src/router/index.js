@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import Documents from '../views/documentList.vue'
 import Unauthorized from '../views/Unauthorized.vue'
+import AccountsView from '../views/AccountsView.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/unauthorized',
     name: 'Unauthorized',
     component: Unauthorized
+  },
+  {
+    path: '/accounts',
+    name: 'Accounts',
+    component: AccountsView
   },
 ]
 

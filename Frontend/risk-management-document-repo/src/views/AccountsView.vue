@@ -20,11 +20,21 @@ export default {
     methods: {
     },
     created: function() {
-        if(this.$cookies.get('user')){
-            this.loadDocuments = true
+        if(typeof this.$cookies.get('user').isAdmin == "string"){
+            if(this.$cookies.get('user').isAdmin == "true"){
+                this.loadDocuments = true
+            }
+            else{
+                this.$router.push('unauthorized')
+            }
         }
         else{
-            this.$router.push('unauthorized')
+            if(this.$cookies.get('user').isAdmin == true){
+                this.loadDocuments = true
+            }
+            else{
+                this.$router.push('unauthorized')
+            }
         }
     }
 }

@@ -15,6 +15,8 @@
         <div class="error" v-if="!$v.registerPasswordConfirm.minLength && $v.registerPasswordConfirm.$dirty">Password must have at least {{$v.registerPasswordConfirm.$params.minLength.min}} letters.</div>
         <div class="error" v-if="!$v.registerPasswordConfirm.sameAs && $v.registerPasswordConfirm.$dirty">Passwords must match</div>
 
+        <b-form-checkbox v-if="isAdmin" v-model="registerIsAdmin" value="true" unchecked-value="false"></b-form-checkbox>
+
         <p v-text="registerText"></p>
         
         <b-button :disabled="$v.registerPasswordConfirm.$error || $v.registerPassword.$error || $v.registerUserName.$error || !$v.registerPassword.$dirty" class="button" v-on:click="submit">Register!</b-button>
@@ -41,12 +43,23 @@ export default {
                 //hash password
                 let hashedPass = md5(this.registerPassword)
                 let userNametoSend = this.registerUserName
-                let dataToSend = JSON.stringify({
-                    userName: userNametoSend,
-                    passwordHash: hashedPass,
-                    passwordSalt: "registered"
-                })
+                let dataToSend ={}
+                if(this.isAdmin){
+                    dataToSend = JSON.stringify({
+                        userName: userNametoSend,
+                        passwordHash: hashedPass,
+                        isAdmin: this.registerIsAdmin
+                    })
+                }
+                else{
+                    dataToSend = JSON.stringify({
+                        userName: userNametoSend,
+                        passwordHash: hashedPass,
+                        isAdmin: false
+                    })
+                }
 
+                console.log(dataToSend)
                 new Promise((resolve) =>{
                     let http = new XMLHttpRequest();
 
@@ -54,6 +67,7 @@ export default {
                     http.setRequestHeader('Content-Type','application/json');
                     http.onreadystatechange = function(){
                         let response = JSON.parse(http.response)
+                        console.log(response)
                         if(response.status == "OK"){
                             resolve("Account successfully registered! Please try to log in")
                         }
@@ -73,15 +87,18 @@ export default {
                     }
                     http.send(dataToSend);
                 }).then((res) =>{
+                    console.log(res)
                     this.registerText = res
                     this.$emit('update');
                 });
             }
         },
+        props: ['isAdmin'],
         data(){ return {
             registerUserName: null,
             registerPassword: null,
             registerPasswordConfirm: null,
+            registerIsAdmin: false,
             registerText: null,
             passwordSame: true,
             }

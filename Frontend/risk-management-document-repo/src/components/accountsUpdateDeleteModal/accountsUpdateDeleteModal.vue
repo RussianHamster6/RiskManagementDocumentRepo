@@ -15,6 +15,8 @@
         <div class="error" v-if="!$v.accountPasswordConfirm.minLength && $v.accountPasswordConfirm.$dirty">Password must have at least {{$v.accountPasswordConfirm.$params.minLength.min}} letters.</div>
         <div class="error" v-if="!$v.accountPasswordConfirm.sameAs && $v.accountPasswordConfirm.$dirty">Passwords must match</div>
 
+        <b-form-checkbox v-model="accountIsAdmin" value="true" unchecked-value="false"></b-form-checkbox>
+
         <p v-text="accountText"></p>
         
         <b-button :disabled="$v.accountPasswordConfirm.$error || $v.accountPassword.$error || $v.accountUserName.$error || !$v.accountPassword.$dirty" class="button" v-on:click="submit" variant="success">Update</b-button>
@@ -46,12 +48,23 @@ export default {
                 //hash password
                 let hashedPass = md5(this.accountPassword)
                 let userNametoSend = this.accountUserName
-                let dataToSend = JSON.stringify({
-                    userName: userNametoSend,
-                    passwordHash: hashedPass,
-                    passwordSalt: "updated"
+                let dataToSend = {}
+                if(this.accountIsAdmin == "true"){
+                    dataToSend = JSON.stringify({
+                        userName: userNametoSend,
+                        passwordHash: hashedPass,
+                        isAdmin: true
                 })
-
+                }
+                else{
+                    dataToSend = JSON.stringify({
+                        userName: userNametoSend,
+                        passwordHash: hashedPass,
+                        isAdmin: false
+                    })
+                }
+                
+                console.log(dataToSend)
                 new Promise((resolve) =>{
                     let http = new XMLHttpRequest();
 
@@ -59,6 +72,7 @@ export default {
                     http.setRequestHeader('Content-Type','application/json');
                     http.onreadystatechange = function(){
                         let response = JSON.parse(http.response)
+                        console.log(response)
                         if(response.status == "OK"){
                             resolve({status: "OK", message:"Account successfully updated! Please try to log in"})
                         }
@@ -114,14 +128,16 @@ export default {
                 this.ogUserName = newVal.userName
                 this.accountPassword = ""
                 this.accountPasswordConfirm = ""
+                this.accountIsAdmin = newVal.isAdmin
                 this.promptDeleteConfirmation = false
-        }
+        },
     },
         data(){ return {
             accountUserName: null,
             ogUserName: null,
             accountPassword: null,
             accountPasswordConfirm: null,
+            accountIsAdmin: null,
             accountText: null,
             passwordSame: true,
             promptDeleteConfirmation: false

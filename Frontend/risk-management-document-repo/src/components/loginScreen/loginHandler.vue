@@ -18,7 +18,7 @@
             </div>
         </b-container>
 
-        <loginModal ref="loginModal"></loginModal>
+        <loginModal ref="loginModal" :isAdmin="false"></loginModal>
     </div>
 </template>
 

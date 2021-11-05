@@ -1,8 +1,8 @@
 class User{
-    constructor(name,passwordHash,salt){
+    constructor(name,passwordHash,isAdmin){
         this.userName = name;
         this.passwordHash = passwordHash;
-        this.passwordSalt = salt;
+        this.isAdmin = isAdmin;
     }
 }
 

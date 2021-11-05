@@ -34,7 +34,7 @@ router.post('/', jsonParser, async (req, res) => {
     else if(!req.body.passwordHash || typeof req.body.passwordHash != "string" || req.body.passwordHash == "d41d8cd98f00b204e9800998ecf8427e"){
       res.status(400).send({"error":"passwordHash is invalid"})
     }
-    else if(!req.body.isAdmin || typeof req.body.isAdmin != "boolean"){
+    else if(req.body.isAdmin == null){
       res.status(400).send({"error":"isAdmin is invalid"})
     }
     else{
@@ -57,7 +57,7 @@ router.post('/update/:userId', jsonParser, function (req,res) {
   else if(!req.body.passwordHash || typeof req.body.passwordHash != "string" || req.body.passwordHash == "d41d8cd98f00b204e9800998ecf8427e"){
     res.status(400).send({"error":"passwordHash is invalid"})
   }
-  else if(!req.body.isAdmin || typeof req.body.isAdmin != "boolean"){
+  else if(req.body.isAdmin == null){
     res.status(400).send({"error":"isAdmin is invalid"})
   }
   else{

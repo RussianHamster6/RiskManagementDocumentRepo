@@ -9,7 +9,7 @@
             <b-table hover :items="accounts" :fields="fields" @row-clicked="rowClickHandler">
             </b-table>
         </div>
-        <loginModal ref="loginModal" @update="getAccountData"></loginModal>
+        <loginModal ref="loginModal" @update="getAccountData" :isAdmin="true"></loginModal>
         <accountsUpdateDeleteModal ref="accountsUpdateDeleteModal" :user="userToView" @update="getAccountData"></accountsUpdateDeleteModal>
     </div>
 </template>
@@ -31,7 +31,11 @@ export default {
                 {
                     key: 'userName',
                     sortable: true
-                }
+                },
+                {
+                    key: 'isAdmin',
+                    sortable: true
+                },
             ],
             userToView : new User("FAKE", "FAKE", "FAKE"),
             searchString: ""
@@ -53,7 +57,7 @@ export default {
                 http.send();
             }).then(async (res) =>{
                 res.forEach(x => {
-                    let accountToAdd = new User(x.userName,x.passwordHash,x.passwordSalt)
+                    let accountToAdd = new User(x.userName,x.passwordHash,x.isAdmin)
                     this.accounts.push(accountToAdd);
                     this.ogAccounts.push(accountToAdd);
                 });

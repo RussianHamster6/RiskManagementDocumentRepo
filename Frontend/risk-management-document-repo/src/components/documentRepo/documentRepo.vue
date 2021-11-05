@@ -2,7 +2,10 @@
     <div>
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
-        
+        <div>
+            <b-form-input v-model="searchString" placeholder="Search... (Search with empty to clear)" style="width: 25%; margin-left:25px"></b-form-input>
+            <b-button class="float-left" style="margin-left:25px; margin-top:5px" @click="search">Search</b-button>
+        </div>
         <b-button variant="success" class="float-right" style="margin-right: 25px; margin-bottom:10px" @click="add">+</b-button>
         <div>
             <b-table hover :items="documents" :fields="fields" @row-clicked="rowClickHandler">
@@ -26,6 +29,7 @@ export default{
     data() {
         return {
             documents : [],
+            ogDocuments : [],
             fields: 
             [
                 {
@@ -41,7 +45,8 @@ export default{
                     sortable: true
                 },
             ],
-            documentToView : new Document("FAKE", "FAKE", "FAKE")
+            documentToView : new Document("FAKE", "FAKE", "FAKE"),
+            searchString: "",
         }
     },
     methods:{
@@ -106,6 +111,7 @@ export default{
                     let dateWarning = this.aboutToExpireDate(new Date())
                     let documentToAdd = new Document(x.documentName,x.documentPath,this.euroifyDate(x.expiry))
                     this.documents.push(documentToAdd);
+                    this.ogDocuments.push(documentToAdd)
                     
                     //split the date string to make a date object
                     let docDate = this.getDocDate(documentToAdd.expiry.split('/'))
@@ -121,6 +127,19 @@ export default{
                     }
                 });
             })
+        },
+        search(){
+            let searchVal = this.searchString
+            if(searchVal == "" || searchVal == null){
+                this.documents = this.ogDocuments
+            }
+            else{
+                this.documents = this.ogDocuments
+
+                this.documents = this.documents.filter(document =>{
+                    return document.documentName.toLowerCase().includes(searchVal.toLowerCase())
+                })
+            }
         }
     },
     mounted: function (){

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <b-form-input v-model="searchString" placeholder="Search..." style="width: 25%; margin-left:25px"></b-form-input>
+            <b-form-input v-model="searchString" placeholder="Search... (Search with empty to clear)" style="width: 25%; margin-left:25px"></b-form-input>
             <b-button class="float-left" style="margin-left:25px; margin-top:5px" @click="search">Search</b-button>
         </div>
         <b-button variant="success" class="float-right" style="margin-right: 25px; margin-bottom:10px" @click="addUser">+</b-button>

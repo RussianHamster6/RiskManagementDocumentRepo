@@ -2,11 +2,13 @@
     <div>
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
+        <b-button class="float-right" style="margin-right: 25px; margin-bottom:10px" @click="add">+</b-button>
         <div>
             <b-table hover :items="documents" :fields="fields" @row-clicked="rowClickHandler">
             </b-table>
         </div>
         <DocumentViewModal ref="documentViewModal" :document="documentToView" @update="getDocumentData"></DocumentViewModal>
+        <DocumentAddModal ref="documentAddModal" @update="getDocumentData"></DocumentAddModal>
     </div>
 </template>
 
@@ -14,9 +16,10 @@
 import Config from '../config/config.js'
 import Document from '../../models/document.js'
 import DocumentViewModal from '../documentViewModal/documentViewModal.vue'
+import DocumentAddModal from '../documentAddModal/documentAddModal.vue'
 
 export default{
-    components: { DocumentViewModal },
+    components: { DocumentViewModal, DocumentAddModal },
     setup() {
     },
     data() {
@@ -41,6 +44,9 @@ export default{
         }
     },
     methods:{
+        add(){
+            this.$refs.documentAddModal.show();
+        },
         rowClickHandler(record){
             let config = new Config();
             let urlToSend = config.url + 'Documents/'+ record.documentName 
@@ -55,7 +61,6 @@ export default{
                 }
                 http.send();
             }).then(async (res) =>{
-                //console.log(res)
                 this.documentToView = res
                 this.$refs.documentViewModal.show();
             })
@@ -98,14 +103,11 @@ export default{
                     let dateDanger = new Date();
                     //get the date that will display warnings for documents
                     let dateWarning = this.aboutToExpireDate(new Date())
-                    console.log("dateWarning:")
-                    console.log(dateWarning)
                     let documentToAdd = new Document(x.documentName,x.documentPath,this.euroifyDate(x.expiry))
                     this.documents.push(documentToAdd);
                     
                     //split the date string to make a date object
                     let docDate = this.getDocDate(documentToAdd.expiry.split('/'))
-                    console.log(docDate)
                     //display expired documents
                     if(dateDanger > docDate){
                         this.documents[this.documents.length - 1]._rowVariant = 'danger'

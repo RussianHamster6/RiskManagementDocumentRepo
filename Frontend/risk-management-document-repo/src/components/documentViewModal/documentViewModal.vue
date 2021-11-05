@@ -6,7 +6,7 @@
         <b-form-input v-model="documentName" class="inputBox" @input="$v.documentName.$touch"></b-form-input>
         <div class="error" v-if="badFileExtention">Please include a file extention on your fileName</div>
         <div class="error" v-if="!$v.documentName.required && $v.documentName.$dirty">Field is required</div>
-        <div class="error" v-if="!$v.documentName.minLength && $v.documentName.$dirty">UserName must have at least {{$v.documentName.$params.minLength.min}} letters.</div>
+        <div class="error" v-if="!$v.documentName.minLength && $v.documentName.$dirty">Document Name must have at least {{$v.documentName.$params.minLength.min}} letters.</div>
 
         <b-form-input v-model="documentPath" :disabled="true" class="inputBox"></b-form-input>
 
@@ -70,7 +70,6 @@ export default {
                 splitDate[1] = '0' + splitDate[1]
             }
             let date = splitDate[2] + '-' + splitDate[0] + '-' +splitDate[1]
-            console.log(date)
             return date
         },
         saveBlob(blob, fileName) {
@@ -101,14 +100,11 @@ export default {
             this.americifyDate(this.expiryDate);
             console.log("entered update")
 
-            if(!this.badDate || !this.badFileExtention || !this.$v.$anyError){
-                console.log("entered if")
+            if(!this.badDate && !this.badFileExtention && !this.$v.$anyError){
                 let config = new Config();
                 let urlToSend = config.url + 'Documents/update/'+ this.ogDocName
 
                 let splitDocName = this.documentName.split('.')
-
-                console.log(this.documentToSend)
 
                 let formData = new FormData();
                 formData.append("documentName", splitDocName[0]);
@@ -120,18 +116,14 @@ export default {
                 http.open("POST", urlToSend);
                 let vmInstance = this
                 http.onreadystatechange = function(){
-                    console.log("readystatechange")
                     let response = JSON.parse(http.response)
-                    
-                    console.log(response.message)
-
+                    vmInstance.documentMessage = response.message
                     vmInstance.$emit('update');
                     vmInstance.hide();
                 }
                 http.onerror = function(){
                     let response = JSON.parse(http.response)
-                    console.log("ERROR")
-                    console.log(response.message)
+                    vmInstance.documentMessage = response.message
                 }
                 http.send(formData);
             }
@@ -144,20 +136,14 @@ export default {
             http.open("DELETE", urlToSend);
             let vmInstance = this
             http.onreadystatechange = function(){
-                console.log("readystatechange")
-                let response = JSON.parse(http.response)
-                console.log(response)
-                this.documentMessage = response.message
-                
-                console.log(response.message)
+                console.log(http.response)
+                this.documentMessage = http.response.message
 
                 vmInstance.$emit('update');
                 vmInstance.hide();
             }
             http.onerror = function(){
-                let response = JSON.parse(http.response)
-                console.log("ERROR")
-                console.log(response.message)
+                this.documentMessage = http.response.message
             }
             http.send();
         },
@@ -173,7 +159,7 @@ export default {
             ogDocName: undefined,
             badDate: false,
             badFileExtention: false,
-            documentMessage: undefined
+            documentMessage: ""
         }
     },
     watch: {

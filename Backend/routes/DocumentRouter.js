@@ -87,7 +87,11 @@ router.delete('/:documentName', async (req,res) => {
             res.send(ret)
         }).catch((ret) => {
             console.log(ret)
-            res.status(500).send(ret)
+            if(ret.message == "A Document was found with that name, please update or use a different name"){
+                res.status(400).send(ret)
+            }
+            else{res.status(500).send(ret)}
+            
         })
     }
 })

@@ -20,21 +20,26 @@ export default {
     methods: {
     },
     created: function() {
-        if(typeof this.$cookies.get('user').isAdmin == "string"){
-            if(this.$cookies.get('user').isAdmin == "true"){
-                this.loadDocuments = true
+        if(this.$cookies.get('user')){
+            if(typeof this.$cookies.get('user').isAdmin == "string"){
+                if(this.$cookies.get('user').isAdmin == "true"){
+                    this.loadDocuments = true
+                }
+                else{
+                    this.$router.push('unauthorized')
+                }
             }
             else{
-                this.$router.push('unauthorized')
+                if(this.$cookies.get('user').isAdmin == true){
+                    this.loadDocuments = true
+                }
+                else{
+                    this.$router.push('unauthorized')
+                }
             }
         }
         else{
-            if(this.$cookies.get('user').isAdmin == true){
-                this.loadDocuments = true
-            }
-            else{
-                this.$router.push('unauthorized')
-            }
+            this.$router.push('unauthorized')
         }
     }
 }

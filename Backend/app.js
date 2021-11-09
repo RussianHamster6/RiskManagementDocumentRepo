@@ -4,10 +4,17 @@ const DocumentRouter = require('./routes/DocumentRouter')
 const app = express()
 const port = 3000
 const fileUpload = require('express-fileupload')
+const cors = require('cors');
 
 app.use(fileUpload({
     createParentPath: true
 }));
+
+app.use(cors({
+  //This wildcard needs to be replaced with an actual url when it is hosted
+  origin: '*',
+  methods: ['GET','POST','DELETE']
+}))
 
 app.use('/Accounts', AccountsRouter)
 app.use('/Documents', DocumentRouter)

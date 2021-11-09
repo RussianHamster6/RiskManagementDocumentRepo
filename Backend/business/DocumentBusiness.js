@@ -101,6 +101,27 @@ class DocumentBusiness extends BusinessBase{
         })
     }
 
+    async GetAllDocuments(){
+        let url = this.url
+        let dataBase = this.db
+
+        return new Promise(function(resolve,reject) {
+            console.log("entering - GetAllDocuments")
+
+            MongoClient.connect(url, function(err,db){
+                if(err) throw err;
+                var dbo = db.db(dataBase);
+                dbo.collection(collection).find({}).toArray(function(err,res){
+                    if (err) throw err;
+                    db.close();
+                    //resolve the values found from the DB
+                    resolve(res);
+                })
+            })
+        console.log('exiting - GetAllDocuments')
+        })
+    }
+
     GetDocumentsDetails(docName){
         let dataBase = this.db
         let url = this.url

@@ -1,17 +1,34 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <LoginHandler/>
+    <div id="nav">
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link> |
+      <router-link to="/documents">Documents</router-link> |
+      <router-link to="/accounts">Accounts</router-link>
+      <b-button style="float: right" @click="signOut" variant="danger">Sign Out</b-button>
+    </div>
+    <router-view/>
   </div>
+  <!--TODO: Add logout button-->
 </template>
 
 <script>
-import LoginHandler from './components/loginScreen/loginHandler.vue'
+import Vue from 'vue'
+import VueCookies from 'vue-cookies'
+
+Vue.use(VueCookies)
 
 export default {
-  name: 'App',
-  components: {
-    LoginHandler
+  methods:{
+    signOut(){
+      if(this.$cookies.get('user')){
+          this.$cookies.remove('user')
+          this.$router.push('/')
+        }
+        else{
+            this.$router.push('unauthorized')
+        }
+    }
   }
 }
 </script>
@@ -23,6 +40,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>

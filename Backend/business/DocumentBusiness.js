@@ -15,7 +15,7 @@ class DocumentBusiness extends BusinessBase{
     //Adds a new document to the database and places the document in the correct place
     async AddDocument(doc,fileName,fileExtention,expiryDate){
         console.log("entering - Add Document")
-        
+        console.log(doc)
         let url = this.url
         let dataBase = this.db
         let filePath = ""
@@ -119,31 +119,6 @@ class DocumentBusiness extends BusinessBase{
                 })
             })
         console.log('exiting - GetAllDocuments')
-        })
-    }
-
-    GetDocumentsDetails(docName){
-        let dataBase = this.db
-        let url = this.url
-
-        return new Promise(function(resolve,reject){
-            console.log("entering - GetDocumentsDetails")
-
-            MongoClient.connect(url, function(err,db){
-                if(err) throw err;
-                var dbo = db.db(dataBase);
-                var query = {documentName: docName}
-                dbo.collection(collection).find(query).toArray(function(err,res){
-                    if(err) throw err;
-                    db.close();
-                    if(res[0] == undefined){
-                        resolve({status: "ERROR", Error: "No document found with that name"})
-                    }
-                    //resolve the values found from the DB
-                    resolve(res);
-                })
-            })
-            console.log("exiting - GetDocumentsDetails")
         })
     }
 

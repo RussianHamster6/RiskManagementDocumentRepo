@@ -3,6 +3,8 @@ const { response } = require('express');
 
 //After tests have run some database cleanup is required. Any inserted values will need to be deleted although this will not negatively impact the performance of the application
 
+//if you want these region tabs to work as they do for me see this VSCode extention: https://marketplace.visualstudio.com/items?itemName=maptz.regionfolder&ssr=false#overview
+
 /* #region  Example Tests from docs */
 /*test('foo', t => {
     t.pass();
@@ -15,6 +17,7 @@ test('bar', async t => {
 /* #endregion */
 
 /* #region AccountsBusiness Tests*/
+
 const AccountBusiness = require('./business/AccountBusiness')
 let accountBusiness; 
 let fakeAccount
@@ -134,4 +137,68 @@ test('AccountDeleteWithInvalidAccountThenError', async t => {
     
 })*/
 
+/* #endregion */
+
+/* #region DocumentBusiness Tests */
+const DocumentBusiness = require('./business/DocumentBusiness')
+let documentBusiness
+
+function setUpDocumentBusinessTests(){
+    documentBusiness = new DocumentBusiness()
+}
+
+
+//Document Add test not possible due to document and therefore will need to be performed manually before running tests
+//The request to send will be shown as an image stored in the testStuff folder. If this is not done properly tests will not run
+
+//Test to see if the doesDocumentExist successfully returns true when the document should exist
+test('documentExistWhenDocumentNameIsValidThenTrue', async t =>{
+    setUpDocumentBusinessTests()
+    let result = await documentBusiness.doesDocumentExist('testDoc.txt')
+
+    t.true(result)
+})
+
+//Test to see if the doesDocumentExist successfully returns false when the document should not exist
+test('documentExistWhenDocumentNameIsInvalidThenFalse', async t =>{
+    setUpDocumentBusinessTests()
+    let result = await documentBusiness.doesDocumentExist('GARBAGE')
+
+    t.false(result)
+})
+
+//Test to see if get Document returns the correct document when called
+test('getDocumentReturnDocumentWhenValidDocumentName', async t => {
+    setUpDocumentBusinessTests();
+    let result = await documentBusiness.getDocument('testDoc.txt')
+
+    t.is(result[0].documentName,'testDoc.txt')
+})
+//test to see if get document errors when invalid document name passed
+test('getDocumentReturnERRORWhenInvalidDocumentName', async t => {
+    setUpDocumentBusinessTests();
+    await documentBusiness.getDocument('GARBAGE').then((response) =>{
+        t.fail()
+    }).catch((response) => {
+        t.is(response.status, 'ERROR')
+        t.is(response.message, 'no document found with that name')
+    })
+
+})
+
+//get all documents working as normal
+test('getAllDocumentsReturnsSuccess', async t => {
+    setUpDocumentBusinessTests();
+    await documentBusiness.GetAllDocuments().then((response) => {
+        t.is(response[response.length - 1].documentName, 'testDoc.txt')
+    })
+})
+
+test('deleteDocumentWithValidDocNameThenSuccess', async t => {
+    setUpDocumentBusinessTests();
+    
+    let response = await documentBusiness.deleteDocument('testDoc.txt')
+    t.is(response.status, 'OK')
+    t.is(response.message, '1 Document Deleted' )
+})
 /* #endregion */

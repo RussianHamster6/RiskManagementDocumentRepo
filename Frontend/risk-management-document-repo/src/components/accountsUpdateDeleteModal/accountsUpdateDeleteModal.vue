@@ -15,7 +15,7 @@
         <div class="error" v-if="!$v.accountPasswordConfirm.minLength && $v.accountPasswordConfirm.$dirty">Password must have at least {{$v.accountPasswordConfirm.$params.minLength.min}} letters.</div>
         <div class="error" v-if="!$v.accountPasswordConfirm.sameAs && $v.accountPasswordConfirm.$dirty">Passwords must match</div>
 
-        <b-form-checkbox v-model="accountIsAdmin" value="true" unchecked-value="false"></b-form-checkbox>
+        <b-form-checkbox v-model="accountIsAdmin" value="true" unchecked-value="false">Is Admin?</b-form-checkbox>
 
         <p v-text="accountText"></p>
         

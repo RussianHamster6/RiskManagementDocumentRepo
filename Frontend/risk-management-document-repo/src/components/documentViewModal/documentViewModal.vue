@@ -4,7 +4,7 @@
         <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.21.2/dist/bootstrap-vue.css" />
         <b-button class="button float-right" @click="promptDeleteConfirmation = true" variant="warning">Delete</b-button>
         <b-button class="button float-right" v-if="promptDeleteConfirmation" @click="deleteDoc" variant="danger">Confirm Delete?</b-button>
-        <b-form-input v-model="documentName" class="inputBox" @input="$v.documentName.$touch"></b-form-input>
+        <b-form-input v-model="documentName" class="inputBox" @input="onDocumentNameFieldInput"></b-form-input>
         <div class="error" v-if="badFileExtention">Please include a file extention on your fileName</div>
         <div class="error" v-if="!$v.documentName.required && $v.documentName.$dirty">Field is required</div>
         <div class="error" v-if="!$v.documentName.minLength && $v.documentName.$dirty">Document Name must have at least {{$v.documentName.$params.minLength.min}} letters.</div>
@@ -24,7 +24,7 @@
 
         <p v-text="documentMessage"></p>
 
-        <b-button class="button" @click="download" :disabled="$v.documentName.$dirty" variant="success">Download</b-button>
+        <b-button class="button" @click="download" :disabled="!enableDownload" variant="success">Download</b-button>
         <b-button class="button float-right" @click="update(this)" :disabled="!$v.documentToSend.$model">Update</b-button>
     </b-modal>
 </template>
@@ -148,6 +148,10 @@ export default {
             }
             http.send();
         },
+        onDocumentNameFieldInput(){
+            this.$v.documentName.$touch; 
+            this.enableDownload = false
+        }
     },
 
     props: ['document'],
@@ -161,7 +165,8 @@ export default {
             badDate: false,
             badFileExtention: false,
             promptDeleteConfirmation: false,
-            documentMessage: ""
+            documentMessage: "",
+            enableDownload: true
         }
     },
     watch: {
@@ -171,6 +176,7 @@ export default {
             this.expiryDate = this.formatDateForDatePicker(newVal.expiry)
             this.ogDocName = newVal.documentName,
             this.promptDeleteConfirmation = false
+            this.enableDownload = true
         }
     },
     validations:{

@@ -1,0 +1,5 @@
+Additional frameworks used:
+md5
+Vuelidate
+cors
+vue-cookies

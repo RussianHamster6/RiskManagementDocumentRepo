@@ -9,6 +9,5 @@ node_modules/
 dist/
 npm-debug.log
 yarn-error.log
-docStore*/
 
 # End of https://www.toptal.com/developers/gitignore/api/vuejs

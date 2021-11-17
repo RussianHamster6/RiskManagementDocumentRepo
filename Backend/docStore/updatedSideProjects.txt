@@ -1,0 +1,26 @@
+Date Planner:
+Mobile app based on locational data that uses google maps api to find reseraunts near you based on reviews,
+time you plan on going out and how far it is from you. Generate score based on these factors and figure out 
+an algorithm for generating this score.
+Possibly using React Native or Naativescript
+
+0 Hour contract manager:
+Manage people's shifts at 0 hour contract jobs. Manage time availability, holiday applications, specific jobs ect.
+Could make this web/desktop or mobile. All would have merits. 
+
+Risk Management solution for Servelec:
+Talk to danielle and work on a risk management solution for Servelec. Potetnially done as part of uni module. 
+Probably utilise a webapp for this. Use Aws Amplify.
+
+Prizon management solution. Talk to dad. 
+
+Do some sort of AI shiz. Potentially do analysis on fflogs parse's or something.
+
+Something Final Fantasy XIV related. 
+
+Pinball game
+
+Google Home extention, perhaps for ffxiv. 
+
+ffxiv website for planning boss encounters.
+-click and draggy icons around a circle basically

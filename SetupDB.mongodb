@@ -1,7 +1,7 @@
 // MongoDB Playground
 // Use Ctrl+Space inside a snippet or a string literal to trigger completions.
 
-const database = 'RiskManagementDocumentRepo';
+const database = 'RiskManagmentDocumentRepo';
 const collection = 'users';
 const collection1 = 'documents'
 
